@@ -1,0 +1,79 @@
+1.Scikit learn comes with pre-loaded dataset, load the digits dataset from that collection and 
+write a helper function to plot the image using matplotlib.[Hint:Explore datasets module from scikit learn]
+
+------- Code here
+from sklearn.datasets import load_digits
+digits=load_digits()
+import matplotlib.pyplot as plt 
+plt.gray() 
+plt.matshow(digits.images[0]) 
+plt.show() 
+
+2.Make a train -test split with 20% of the data set aside for testing. Fit a logistic regression model and observe the accuracy.
+
+---- Code here
+import pandas as pd
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+x_train, x_test, y_train, y_test = train_test_split(digits.data, digits.target, test_size=0.25, random_state=0)
+df=pd.DataFrame(digits.data)
+#fit data
+regression=LogisticRegression()
+regression.fit(x_train,y_train)
+#predict labels for new data
+regression.predict(x_test)
+#Measure Accuracy
+score = regression.score(x_test, y_test)
+print(score)
+
+3.Using scikit learn perform a PCA transformation such that the transformed dataset can explain 95% of the variance in the original dataset. 
+Find out the number of components in the projected subspace.
+
+-------Code here
+#Implement PCA Fitting
+from sklearn.decomposition import PCA
+pca = PCA(.95)
+df=pd.DataFrame(digits.data)
+pca.fit(df)
+#Implement PCA Transformation
+existing_nd=pca.transform(df)
+pca.n_components_
+
+#Number of components in the projected subspace are 29 
+
+4.Transform the dataset and fit a logistic regression and observe the accuracy. Compare it with the previous model andcomment on the accuracy
+[Hint: Project both the train and test samples to the new subspace]
+
+------Code here
+#Logistic Regression on Transformed Data
+x_train, x_test, y_train, y_test = train_test_split(df1, digits.target, test_size=0.25, random_state=0)
+df=pd.DataFrame(df1)
+#fit data
+regression=LogisticRegression()
+regression.fit(x_train,y_train)
+#predict labels for new data
+regression.predict(x_test)
+#Measure Accuracy
+score = regression.score(x_test, y_test)
+print(score)
+
+5.Compute the confusion matrix and count the number of instances that has gone wrong. For each of the wrong sample,
+plot the digit along with predicted and original label.
+
+--------Code here
+#Confusion Matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import metrics
+predictions = regression.predict(x_test)
+cm = metrics.confusion_matrix(y_test, predictions)
+#print(cm)
+#Plot figure
+plt.figure(figsize=(9,9))
+sns.heatmap(cm, annot=True, fmt=".3f", linewidths=.5, square = True, cmap = 'Blues_r');
+plt.ylabel('Actual label');
+plt.xlabel('Predicted label');
+all_sample_title = 'Accuracy Score: {0}'.format(score)
+plt.title(all_sample_title, size = 15);
